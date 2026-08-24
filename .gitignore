@@ -1,0 +1,11 @@
+node_modules
+.DS_Store
+.next/
+.sites-runtime/
+.wrangler/
+dist/
+out/
+next-env.d.ts
+*.tsbuildinfo
+.env*
+!.env.example
