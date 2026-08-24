@@ -132,7 +132,7 @@ button {
   margin-left: auto;
 }
 .primary-nav button.active,
-.space-link.selected,
+.space-row.selected,
 .all-work.selected {
   background: #292e39;
   color: #fff;
@@ -156,11 +156,23 @@ button {
   color: #9299a4;
   background: transparent;
   border: 0;
-  font-size: 18px;
+  padding: 4px;
+  font-size: 10px;
+  font-weight: 650;
+}
+.space-row {
+  display: flex;
+  align-items: center;
+  border-radius: 7px;
 }
 .space-link {
-  width: 100%;
+  flex: 1;
+  min-width: 0;
+  width: auto;
   padding: 0 8px;
+}
+.space-row.selected .space-link {
+  color: #fff;
 }
 .space-link i {
   width: 7px;
@@ -178,6 +190,27 @@ button {
   font-style: normal;
   font-size: 10px;
   color: #777f8d;
+}
+.space-delete {
+  display: none;
+  flex: none;
+  height: 26px;
+  margin-right: 6px;
+  padding: 0 7px;
+  border: 0;
+  border-radius: 5px;
+  background: transparent;
+  color: #d98a83;
+  font-size: 9px;
+}
+.space-row:hover .space-delete,
+.space-row:focus-within .space-delete,
+.space-row.selected .space-delete {
+  display: block;
+}
+.space-delete:hover {
+  background: #6b3334;
+  color: #fff;
 }
 .all-work {
   width: 100%;
@@ -307,9 +340,7 @@ button {
   margin: auto;
 }
 .page-head {
-  display: flex;
-  align-items: end;
-  justify-content: space-between;
+  display: block;
   margin-bottom: 26px;
 }
 .page-head p,
@@ -331,46 +362,9 @@ button {
   font-size: 11px;
   color: #868a92;
 }
-.page-controls {
-  display: flex;
-  align-items: center;
-  gap: 9px;
-}
-.delete-space {
-  height: 34px;
-  padding: 0 11px;
-  border: 1px solid #d7b7b2;
-  border-radius: 7px;
-  background: #fff;
-  color: #a4433d;
-  font-size: 11px;
-  white-space: nowrap;
-}
-.delete-space:hover {
-  background: #fff5f3;
-  border-color: #c98e87;
-}
+.mobile-space-controls,
 .mobile-space-picker {
   display: none;
-}
-.view-switch {
-  display: flex;
-  background: #e8e6df;
-  padding: 3px;
-  border-radius: 7px;
-}
-.view-switch button {
-  border: 0;
-  background: transparent;
-  color: #747985;
-  font-size: 11px;
-  padding: 7px 12px;
-  border-radius: 5px;
-}
-.view-switch button.active {
-  background: white;
-  color: #20232a;
-  box-shadow: 0 1px 4px #00000012;
 }
 .loading {
   padding: 70px;
@@ -964,9 +958,6 @@ body {
 .page-head > div > span {
   font-size: 13px;
 }
-.view-switch button {
-  font-size: 13px;
-}
 .column > header div {
   font-size: 11px;
   letter-spacing: 0.08em;
@@ -1155,17 +1146,10 @@ body {
   .content {
     padding: 22px 14px;
   }
-  .page-head {
-    align-items: start;
-    gap: 15px;
-  }
   .page-head h1 {
     font-size: 27px;
   }
   .page-head > div > span {
-    display: none;
-  }
-  .view-switch {
     display: none;
   }
   .kanban {
@@ -1255,10 +1239,18 @@ select:focus-visible,
   .search > span {
     display: none;
   }
+  .mobile-space-controls {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    margin-bottom: 8px;
+  }
   .mobile-space-picker {
     display: block;
-    max-width: min(62vw, 260px);
-    margin: 0 0 8px;
+    flex: 1;
+    min-width: 0;
+    max-width: 260px;
+    margin: 0;
     border: 1px solid #d9d6cf;
     border-radius: 6px;
     background: #fff;
@@ -1266,12 +1258,13 @@ select:focus-visible,
     padding: 6px 8px;
     font-size: 12px;
   }
-  .page-controls {
-    align-self: end;
-  }
-  .delete-space {
-    height: 32px;
-    padding: 0 9px;
+  .mobile-delete-space {
+    height: 30px;
+    padding: 0 8px;
+    border: 1px solid #d7b7b2;
+    border-radius: 6px;
+    background: #fff;
+    color: #a4433d;
     font-size: 10px;
   }
 }

@@ -442,6 +442,7 @@ export default function Home() {
           tasks={data.tasks}
           onSelect={setSpaceId}
           onAdd={() => setModal("space")}
+          onDelete={deleteSpace}
         />
         <SpaceLinks
           title="Projects"
@@ -452,6 +453,7 @@ export default function Home() {
           tasks={data.tasks}
           onSelect={setSpaceId}
           onAdd={() => setModal("space")}
+          onDelete={deleteSpace}
         />
         <button
           type="button"
@@ -540,21 +542,32 @@ export default function Home() {
         <div className="content">
           <div className="page-head">
             <div>
-              <select
-                className="mobile-space-picker"
-                aria-label="Choose workspace"
-                value={spaceId}
-                onChange={(event) => setSpaceId(event.target.value)}
-              >
-                <option value="all">All work</option>
-                {data.spaces
-                  .filter((space) => space.id !== "all")
-                  .map((space) => (
-                    <option key={space.id} value={space.id}>
-                      {space.code} · {space.name}
-                    </option>
-                  ))}
-              </select>
+              <div className="mobile-space-controls">
+                <select
+                  className="mobile-space-picker"
+                  aria-label="Choose workspace"
+                  value={spaceId}
+                  onChange={(event) => setSpaceId(event.target.value)}
+                >
+                  <option value="all">All work</option>
+                  {data.spaces
+                    .filter((space) => space.id !== "all")
+                    .map((space) => (
+                      <option key={space.id} value={space.id}>
+                        {space.code} · {space.name}
+                      </option>
+                    ))}
+                </select>
+                {spaceId !== "all" && (
+                  <button
+                    type="button"
+                    className="mobile-delete-space"
+                    onClick={() => deleteSpace(currentSpace)}
+                  >
+                    Remove
+                  </button>
+                )}
+              </div>
               <p>
                 {currentSpace.type === "module"
                   ? currentSpace.code
@@ -567,37 +580,6 @@ export default function Home() {
                 {visible.filter((t) => t.status !== "done").length} open tasks ·{" "}
                 {overdueCount} overdue across all work
               </span>
-            </div>
-            <div className="page-controls">
-              {spaceId !== "all" && (
-                <button
-                  type="button"
-                  className="delete-space"
-                  onClick={() => deleteSpace(currentSpace)}
-                >
-                  Remove workspace
-                </button>
-              )}
-              <div className="view-switch">
-                <button
-                  className={view === "board" ? "active" : ""}
-                  onClick={() => setView("board")}
-                >
-                  Board
-                </button>
-                <button
-                  className={view === "upcoming" ? "active" : ""}
-                  onClick={() => setView("upcoming")}
-                >
-                  List
-                </button>
-                <button
-                  className={view === "calendar" ? "active" : ""}
-                  onClick={() => setView("calendar")}
-                >
-                  Calendar
-                </button>
-              </div>
             </div>
           </div>
           {!ready ? (
@@ -662,6 +644,7 @@ function SpaceLinks({
   tasks,
   onSelect,
   onAdd,
+  onDelete,
 }: {
   title: string;
   spaces: Space[];
@@ -669,6 +652,7 @@ function SpaceLinks({
   tasks: Task[];
   onSelect: (id: string) => void;
   onAdd: () => void;
+  onDelete: (space: Space) => void;
 }) {
   return (
     <div className="nav-section">
@@ -679,26 +663,39 @@ function SpaceLinks({
           aria-label={`Add ${title.toLowerCase()}`}
           onClick={onAdd}
         >
-          +
+          + Add
         </button>
       </div>
-      {spaces.map((s) => (
-        <button
-          type="button"
-          key={s.id}
-          className={`space-link ${active === s.id ? "selected" : ""}`}
-          onClick={() => onSelect(s.id)}
-        >
-          <i style={{ background: s.color }} />
-          <span>{s.name}</span>
-          <em>
-            {
-              tasks.filter((t) => t.spaceId === s.id && t.status !== "done")
-                .length
-            }
-          </em>
-        </button>
-      ))}
+      {spaces.map((s) => {
+        const selected = active === s.id;
+        return (
+          <div className={`space-row ${selected ? "selected" : ""}`} key={s.id}>
+            <button
+              type="button"
+              className="space-link"
+              onClick={() => onSelect(s.id)}
+            >
+              <i style={{ background: s.color }} />
+              <span>{s.name}</span>
+              <em>
+                {
+                  tasks.filter((t) => t.spaceId === s.id && t.status !== "done")
+                    .length
+                }
+              </em>
+            </button>
+            <button
+              type="button"
+              className="space-delete"
+              aria-label={`Remove ${s.name}`}
+              title={`Remove ${s.name}`}
+              onClick={() => onDelete(s)}
+            >
+              Remove
+            </button>
+          </div>
+        );
+      })}
     </div>
   );
 }
