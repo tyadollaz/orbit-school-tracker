@@ -5,6 +5,7 @@ import {
   advanceRecurrence,
   materializeRecurring,
   parseAppData,
+  removeSpace,
 } from "../app/orbit-data.ts";
 
 function validData() {
@@ -116,4 +117,44 @@ test("materialising a completed occurrence preserves its history", () => {
   assert.equal(materialized.tasks[0].subtasks[0].done, false);
   assert.equal(materialized.tasks[1].status, "done");
   assert.equal(materialized.tasks[1].subtasks[0].done, true);
+});
+
+test("removing a workspace removes its tasks and cleans dependencies", () => {
+  const data = validData();
+  data.spaces.push({
+    id: "project",
+    name: "Project",
+    type: "project",
+    color: "#337fa0",
+    code: "PRJ",
+  });
+  data.tasks.push({
+    ...data.tasks[0],
+    id: "task-2",
+    title: "Dependent task",
+    spaceId: "project",
+    dependencyIds: ["task-1"],
+    recurrence: undefined,
+  });
+
+  const result = removeSpace(data, "module");
+  assert.deepEqual(
+    result.spaces.map((space) => space.id),
+    ["all", "project"],
+  );
+  assert.deepEqual(
+    result.tasks.map((task) => task.id),
+    ["task-2"],
+  );
+  assert.deepEqual(result.tasks[0].dependencyIds, []);
+});
+
+test("the permanent all-work workspace cannot be removed", () => {
+  const data = validData();
+  assert.equal(removeSpace(data, "all"), data);
+});
+
+test("a backup remains valid after its final user workspace is removed", () => {
+  const result = removeSpace(validData(), "module");
+  assert.deepEqual(parseAppData(result), result);
 });

@@ -7,6 +7,7 @@ monthly calendar without requiring an account or remote database.
 ## What you can do
 
 - Organise work into school modules and independent projects.
+- Remove modules or projects when they are no longer needed.
 - Move tasks through **To Do**, **Doing**, **Blocked**, and **Done**.
 - Add due dates, priorities, notes, subtasks, and task dependencies.
 - Review deadlines in a chronological upcoming list.
@@ -31,6 +32,10 @@ Orbit provides three ways to review the same tasks:
 
 Click a task to edit its details. On desktop, tasks can also be dragged between
 board columns.
+
+Select a module or project and choose **Remove workspace** to delete it. Orbit
+shows the number of affected tasks and asks for confirmation before removing
+the workspace and its tasks.
 
 ## Data, privacy, and backups
 

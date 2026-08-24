@@ -80,8 +80,6 @@ export function parseAppData(value: unknown): AppData | null {
   const workspaceIds = new Set(
     spaces.filter((space) => space.id !== "all").map((space) => space.id),
   );
-  if (workspaceIds.size === 0) return null;
-
   const tasks: Task[] = [];
   for (const candidate of value.tasks) {
     if (!isRecord(candidate)) return null;
@@ -160,6 +158,29 @@ export function parseAppData(value: unknown): AppData | null {
   )
     return null;
   return { tasks, spaces };
+}
+
+export function removeSpace(source: AppData, spaceId: string): AppData {
+  if (spaceId === "all" || !source.spaces.some((space) => space.id === spaceId))
+    return source;
+
+  const removedTaskIds = new Set(
+    source.tasks
+      .filter((task) => task.spaceId === spaceId)
+      .map((task) => task.id),
+  );
+
+  return {
+    spaces: source.spaces.filter((space) => space.id !== spaceId),
+    tasks: source.tasks
+      .filter((task) => !removedTaskIds.has(task.id))
+      .map((task) => ({
+        ...task,
+        dependencyIds: task.dependencyIds.filter(
+          (dependencyId) => !removedTaskIds.has(dependencyId),
+        ),
+      })),
+  };
 }
 
 export function advanceRecurrence(recurrence: Recurrence): string {

@@ -331,6 +331,28 @@ button {
   font-size: 11px;
   color: #868a92;
 }
+.page-controls {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+.delete-space {
+  height: 34px;
+  padding: 0 11px;
+  border: 1px solid #d7b7b2;
+  border-radius: 7px;
+  background: #fff;
+  color: #a4433d;
+  font-size: 11px;
+  white-space: nowrap;
+}
+.delete-space:hover {
+  background: #fff5f3;
+  border-color: #c98e87;
+}
+.mobile-space-picker {
+  display: none;
+}
 .view-switch {
   display: flex;
   background: #e8e6df;
@@ -1232,5 +1254,24 @@ select:focus-visible,
   }
   .search > span {
     display: none;
+  }
+  .mobile-space-picker {
+    display: block;
+    max-width: min(62vw, 260px);
+    margin: 0 0 8px;
+    border: 1px solid #d9d6cf;
+    border-radius: 6px;
+    background: #fff;
+    color: #555a64;
+    padding: 6px 8px;
+    font-size: 12px;
+  }
+  .page-controls {
+    align-self: end;
+  }
+  .delete-space {
+    height: 32px;
+    padding: 0 9px;
+    font-size: 10px;
   }
 }

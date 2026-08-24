@@ -4,6 +4,7 @@ import { FormEvent, useEffect, useMemo, useState } from "react";
 import {
   materializeRecurring,
   parseAppData,
+  removeSpace,
   type AppData,
   type Recurrence,
   type Space,
@@ -366,6 +367,27 @@ export default function Home() {
     }));
     setModal(null);
   }
+  function deleteSpace(space: Space) {
+    const taskCount = data.tasks.filter(
+      (task) => task.spaceId === space.id,
+    ).length;
+    const taskSummary =
+      taskCount === 0
+        ? "It has no tasks."
+        : `This will also permanently delete ${taskCount} ${taskCount === 1 ? "task" : "tasks"}.`;
+    if (
+      !window.confirm(
+        `Remove “${space.name}”?\n\n${taskSummary}\n\nExport a backup first if you may need this data later.`,
+      )
+    )
+      return;
+
+    setData((current) => removeSpace(current, space.id));
+    setSpaceId("all");
+    setNotice(
+      `Removed ${space.name}${taskCount ? ` and ${taskCount} ${taskCount === 1 ? "task" : "tasks"}` : ""}.`,
+    );
+  }
   async function enableNotifications() {
     if (!("Notification" in window)) {
       setNotice("Notifications are not supported in this browser.");
@@ -518,6 +540,21 @@ export default function Home() {
         <div className="content">
           <div className="page-head">
             <div>
+              <select
+                className="mobile-space-picker"
+                aria-label="Choose workspace"
+                value={spaceId}
+                onChange={(event) => setSpaceId(event.target.value)}
+              >
+                <option value="all">All work</option>
+                {data.spaces
+                  .filter((space) => space.id !== "all")
+                  .map((space) => (
+                    <option key={space.id} value={space.id}>
+                      {space.code} · {space.name}
+                    </option>
+                  ))}
+              </select>
               <p>
                 {currentSpace.type === "module"
                   ? currentSpace.code
@@ -531,25 +568,36 @@ export default function Home() {
                 {overdueCount} overdue across all work
               </span>
             </div>
-            <div className="view-switch">
-              <button
-                className={view === "board" ? "active" : ""}
-                onClick={() => setView("board")}
-              >
-                Board
-              </button>
-              <button
-                className={view === "upcoming" ? "active" : ""}
-                onClick={() => setView("upcoming")}
-              >
-                List
-              </button>
-              <button
-                className={view === "calendar" ? "active" : ""}
-                onClick={() => setView("calendar")}
-              >
-                Calendar
-              </button>
+            <div className="page-controls">
+              {spaceId !== "all" && (
+                <button
+                  type="button"
+                  className="delete-space"
+                  onClick={() => deleteSpace(currentSpace)}
+                >
+                  Remove workspace
+                </button>
+              )}
+              <div className="view-switch">
+                <button
+                  className={view === "board" ? "active" : ""}
+                  onClick={() => setView("board")}
+                >
+                  Board
+                </button>
+                <button
+                  className={view === "upcoming" ? "active" : ""}
+                  onClick={() => setView("upcoming")}
+                >
+                  List
+                </button>
+                <button
+                  className={view === "calendar" ? "active" : ""}
+                  onClick={() => setView("calendar")}
+                >
+                  Calendar
+                </button>
+              </div>
             </div>
           </div>
           {!ready ? (
