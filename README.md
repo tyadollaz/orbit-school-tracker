@@ -23,10 +23,10 @@ to focus on its tasks, or choose **View all work** for a combined view.
 
 Orbit provides three ways to review the same tasks:
 
-| View | Best for |
-| --- | --- |
-| **Board** | Planning work by status and moving tasks between stages |
-| **List** | Reviewing upcoming and overdue deadlines in date order |
+| View         | Best for                                                   |
+| ------------ | ---------------------------------------------------------- |
+| **Board**    | Planning work by status and moving tasks between stages    |
+| **List**     | Reviewing upcoming and overdue deadlines in date order     |
 | **Calendar** | Understanding how deadlines are distributed across a month |
 
 Click a task to edit its details. On desktop, tasks can also be dragged between
@@ -80,29 +80,32 @@ npm run start
 
 ## Project commands
 
-| Command | Purpose |
-| --- | --- |
-| `npm run dev` | Start the Vite/Vinext development server |
-| `npm run build` | Create the production worker build |
-| `npm run start` | Serve the production worker build |
-| `npm test` | Build the app and run the rendered-HTML smoke test |
-| `npm run lint` | Check the source with ESLint |
+| Command                | Purpose                                        |
+| ---------------------- | ---------------------------------------------- |
+| `npm run dev`          | Start the Vite/Vinext development server       |
+| `npm run build`        | Create the production worker build             |
+| `npm run start`        | Serve the production worker build              |
+| `npm test`             | Build and run data, auth, and worker tests     |
+| `npm run lint`         | Check the source with ESLint                   |
+| `npm run format`       | Format source and documentation                |
+| `npm run format:check` | Verify formatting without changing files       |
 | `npm run build:github` | Create a Next.js static build for GitHub Pages |
-| `npm run db:generate` | Generate optional Drizzle migrations |
+| `npm run db:generate`  | Generate optional Drizzle migrations           |
 
 ## Deploy to GitHub Pages
 
-The Next.js configuration supports both account sites (`name.github.io`) and
-project sites (`name.github.io/repository`). In GitHub Actions, run:
+The included **Deploy Orbit to GitHub Pages** workflow builds and publishes the
+app whenever `main` is updated. To enable it:
 
-```bash
-npm ci
-npm run build:github
-```
+1. Push this repository to GitHub.
+2. Open **Settings → Pages** in the repository.
+3. Set **Source** to **GitHub Actions**.
+4. Push to `main`, or run the workflow manually from the **Actions** tab.
 
-When `GITHUB_ACTIONS` is set, Next.js enables static export and automatically
-uses the repository name as the base path for project sites. Publish the
-generated `out/` directory with your preferred GitHub Pages workflow.
+The configuration supports both account sites (`name.github.io`) and project
+sites (`name.github.io/repository`). During GitHub Actions builds, Next.js
+automatically enables static export and uses the repository name as the base
+path for project sites.
 
 Because all application data lives in each visitor's browser, deploying a new
 version does not copy, merge, or synchronise task data between devices.
