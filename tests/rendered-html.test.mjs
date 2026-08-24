@@ -3,6 +3,11 @@ import test from "node:test";
 
 const developmentPreviewMeta =
   /<meta(?=[^>]*\bname=["']codex-preview["'])(?=[^>]*\bcontent=["']development["'])[^>]*>/i;
+const githubRepo = process.env.GITHUB_REPOSITORY?.split("/")[1];
+const appBasePath =
+  process.env.GITHUB_ACTIONS && githubRepo && !githubRepo.endsWith(".github.io")
+    ? `/${githubRepo}`
+    : "";
 
 test("renders development preview metadata", async () => {
   const workerUrl = new URL("../dist/server/index.js", import.meta.url);
@@ -10,7 +15,7 @@ test("renders development preview metadata", async () => {
   const { default: worker } = await import(workerUrl.href);
 
   const response = await worker.fetch(
-    new Request("http://localhost/", {
+    new Request(`http://localhost${appBasePath}/`, {
       headers: { accept: "text/html" },
     }),
     {
